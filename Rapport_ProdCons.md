@@ -15,7 +15,7 @@ Le travail couvre les objectifs suivants :
 - Objectif 4 : Synchronisation via Lock & Condition  
 - Objectif 5 : Multi-consommation (get(k))  
 - Objectif 6 : Multi-exemplaires synchrones (messages à n copies)  
-- Objectif Additionnel : TaskExecutor (pool adaptatif de threads)
+- Objectif Additionnel : TaskExecutor non traité en entier
 
 ---
 
@@ -116,10 +116,6 @@ Le but est de développer un système d’exécution de tâches semblable à un 
 - Une tâche est un `Runnable`.  
 - Un buffer similaire à ProdCons sert de file d’attente des tâches.  
 - Les threads consommateurs sont gérés dynamiquement :  
-  - Création si le buffer reçoit une tâche alors qu’aucun worker n’est disponible  
-  - Auto-destruction d’un worker après 3 secondes d’inactivité  
-  - Nombre maximal borné de workers  
-- Le système s’adapte dynamiquement à la charge en temps réel.
 
 ### Intérêt :
 - Approche professionnelle de gestion de threads  
