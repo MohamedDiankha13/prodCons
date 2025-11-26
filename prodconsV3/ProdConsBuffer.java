@@ -111,4 +111,9 @@ empty.release() → signale qu’une place s’est libérée
 	public int totmsg() {
 		return totalProduced;
 	}
+	
+	/*
+	 * On ne contrôle pas la terminaison (appel de join, ni vérification de production v=avant consommation, car les consommateurs
+	 * consomment en bouvle infinie
+	 */
 }

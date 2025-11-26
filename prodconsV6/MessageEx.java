@@ -1,4 +1,4 @@
-package prodcons_optionnel;
+package prodconsV6;
 
 import prodcons.Message;
 

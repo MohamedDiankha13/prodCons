@@ -1,4 +1,4 @@
-package prodcons;
+package prodconsV6;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,7 +9,7 @@ public class TestProdCons {
 
     public static void main(String[] args) throws Exception {
 
-        // Chargement du fichier XML
+        // Charger la configuration
         Properties p = new Properties();
         p.loadFromXML(
             TestProdCons.class.getClassLoader().getResourceAsStream("options.xml")
@@ -23,43 +23,40 @@ public class TestProdCons {
         int minProd = Integer.parseInt(p.getProperty("minProd"));
         int maxProd = Integer.parseInt(p.getProperty("maxProd"));
 
-        // Buffer
         ProdConsBuffer buffer = new ProdConsBuffer(bufSz);
 
-        // Création d'une liste de threads mélangés
+        // Liste pour mélanger producteur/consommateur
         List<Thread> threads = new ArrayList<>();
 
+        // Ajouter les producteurs
         for (int i = 0; i < nProd; i++) {
             threads.add(new Producer(buffer, minProd, maxProd, prodTime));
         }
+
+        // Ajouter les consommateurs
         for (int i = 0; i < nCons; i++) {
             threads.add(new Consumer(buffer, consTime));
         }
 
-        // Mélange aléatoire des producteurs et consommateurs
+        // Mélange complet pour maximiser la concurrence
         Collections.shuffle(threads);
 
-        // Démarrage aléatoire + légère pause pour maximiser la concurrence
+        // Démarrer les threads avec léger décalage pour interleaving
         for (Thread t : threads) {
             t.start();
-            Thread.sleep((int)(Math.random() * 5)); 
+            Thread.sleep((int)(Math.random() * 5));
         }
+
         /*
-         * >>>> Note <<<<
-         * Dans l’Objectif 1, il n’y a normalement PAS d’appel à join(),
-         * car les consommateurs exécutent une boucle infinie :
-         *
-         *     while(true) {
-         *         m = buffer.get();
-         *         ...
-         *     }
-         *
-         * Ils NE SE TERMINENT JAMAIS.
-         *
-         * Appeler join() sur un thread consommateur provoquerait
-         * un blocage éternel du programme.
-         *
+         * NOTE IMPORTANTE (pour le rapport) :
+         *  - Dans l'objectif 6, on utilise des messages synchrones : 
+         *        * un producteur dépose n copies logiques d’un message.
+         *        * chaque consommateur consomme UNE copie.
+         *        * tous les consommateurs doivent consommer AVANT que le producteur soit libéré.
+         *  - Mélanger les threads au démarrage est ESSENTIEL pour éviter les blocages prolongés
+         *    et garantir une vraie concurrence.
+         *  - Comme les consommateurs tournent en boucle infinie et que le protocole synchrone
+         *    n’a pas de mécanisme de terminaison globale → pas de join() dans cet objectif.
          */
     }
-    
 }

@@ -46,6 +46,19 @@ public class TestProdCons {
 	            t.start();
 	            Thread.sleep((int)(Math.random() * 5)); 
 	        }
+	        /*
+	         * >>> NBB <<<
+	         *
+	         * Dans l’objectif 3 (comme l’objectif 1), les consommateurs ne s’arrêtent pas :
+	         *
+	         *    while (true) {
+	         *         Message m = buffer.get();
+	         *         ...
+	         *    }
+	         *
+	         * Il n’y a donc PAS de join() ici.
+	         * Seule la version Objectif 2 gère la terminaison propre.
+	         */
 	    }
 }
 
